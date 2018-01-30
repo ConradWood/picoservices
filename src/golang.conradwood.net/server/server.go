@@ -374,12 +374,17 @@ func serveSwagger(mux *http.ServeMux) {
 // this function is called by http and works out wether it's a grpc or http-serve request
 func grpcHandlerFunc(grpcServer *grpc.Server, otherHandler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path
-		if strings.HasPrefix(path, "/internal/") {
-			otherHandler.ServeHTTP(w, r)
-		} else {
-			//fmt.Println("Req: ", path)
+		// This block is taken from a piece of example code at:
+		// https://github.com/philips/grpc-gateway-example/blob/a269bcb5931ca92be0ceae6130ac27ae89582ecc/cmd/serve.go#L51
+		// The intention is that gRPC requests all get handled by the grpcServer, whilst all other requests
+		// are served by the "other" handler.
+		// This is slightly safer than the previous path-matching logic, and makes it simpler for us to
+		// extend the route handling to host a JSON gateway in front of gRPC. Also, because the mux.Handle
+		// functions used above already include the `/internal` prefix, they'll continue to still work.
+		if r.ProtoMajor == 2 && strings.Contains(r.Header.Get("Content-Type"), "application/grpc") {
 			grpcServer.ServeHTTP(w, r)
+		} else {
+			otherHandler.ServeHTTP(w, r)
 		}
 	})
 }
