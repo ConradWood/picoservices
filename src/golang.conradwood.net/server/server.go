@@ -58,6 +58,8 @@ type UserCache struct {
 
 type Register func(server *grpc.Server) error
 
+type RegisterGateway func(gatewayMux *runtime.ServeMux, port int, grpcOptions []grpc.DialOption) error
+
 // no longer exported - please use NewServerDef instead
 type serverDef struct {
 	Port        int
@@ -65,6 +67,8 @@ type serverDef struct {
 	Key         []byte
 	CA          []byte
 	Register    Register
+	RegisterGateway RegisterGateway
+
 	// set to true if this server does NOT require authentication (default: it does need authentication)
 	NoAuth               bool
 	name                 string
@@ -340,7 +344,13 @@ func startHttpServe(sd *serverDef, grpcServer *grpc.Server) error {
 		pleaseShutdown(w, req, sd)
 	})
 	mux.Handle("/internal/service-info/metrics", promhttp.Handler())
+
 	gwmux := runtime.NewServeMux()
+	err := sd.RegisterGateway(gwmux, sd.Port, []grpc.DialOption{grpc.WithInsecure()})
+	if err != nil {
+		fmt.Printf("startHttpServe: %v\n", err)
+	}
+
 	mux.Handle("/", gwmux)
 	serveSwagger(mux)
 
