@@ -502,11 +502,12 @@ func (s *RegistryService) GetTarget(ctx context.Context, pr *pb.GetTargetRequest
 				continue
 			}
 		}
+		yourip, _ := IPFromContext(ctx)
 		for _, si := range se.instances {
 			if si.hasApi(pr.ApiType) {
 				//fmt.Printf("Adding %s\n", si.toString())
 				sd := se.desc
-				gr := &pb.GetResponse{}
+				gr := &pb.GetResponse{YourIP: yourip}
 				gr.Service = sd
 				gr.Location = &pb.ServiceLocation{}
 				sa := &si.address
@@ -576,4 +577,19 @@ func (s *RegistryService) InformProcessShutdown(ctx context.Context, pr *pb.Proc
 		}
 	}
 	return &pb.EmptyResponse{}, nil
+}
+
+func IPFromContext(ctx context.Context) (string, error) {
+	peer, ok := peer.FromContext(ctx)
+	if !ok {
+		fmt.Println("Error getting peer ")
+		return "", errors.New("Error getting peer from contextn")
+	}
+
+	peerhost, _, err := net.SplitHostPort(peer.Addr.String())
+	if err != nil {
+		return "", errors.New("Invalid peer")
+	}
+	return peerhost, nil
+
 }

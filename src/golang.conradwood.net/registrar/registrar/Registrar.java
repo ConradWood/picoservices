@@ -3143,6 +3143,24 @@ public final class Registrar {
      */
     com.google.protobuf.ByteString
         getServiceIDBytes();
+
+    /**
+     * <pre>
+     * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+     * </pre>
+     *
+     * <code>optional string YourIP = 4;</code>
+     */
+    java.lang.String getYourIP();
+    /**
+     * <pre>
+     * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+     * </pre>
+     *
+     * <code>optional string YourIP = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getYourIPBytes();
   }
   /**
    * Protobuf type {@code registrar.GetResponse}
@@ -3157,6 +3175,7 @@ public final class Registrar {
     }
     private GetResponse() {
       serviceID_ = "";
+      yourIP_ = "";
     }
 
     @java.lang.Override
@@ -3214,6 +3233,12 @@ public final class Registrar {
               java.lang.String s = input.readStringRequireUtf8();
 
               serviceID_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              yourIP_ = s;
               break;
             }
           }
@@ -3315,6 +3340,48 @@ public final class Registrar {
       }
     }
 
+    public static final int YOURIP_FIELD_NUMBER = 4;
+    private volatile java.lang.Object yourIP_;
+    /**
+     * <pre>
+     * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+     * </pre>
+     *
+     * <code>optional string YourIP = 4;</code>
+     */
+    public java.lang.String getYourIP() {
+      java.lang.Object ref = yourIP_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        yourIP_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+     * </pre>
+     *
+     * <code>optional string YourIP = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getYourIPBytes() {
+      java.lang.Object ref = yourIP_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        yourIP_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3336,6 +3403,9 @@ public final class Registrar {
       if (!getServiceIDBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, serviceID_);
       }
+      if (!getYourIPBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, yourIP_);
+      }
     }
 
     public int getSerializedSize() {
@@ -3353,6 +3423,9 @@ public final class Registrar {
       }
       if (!getServiceIDBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, serviceID_);
+      }
+      if (!getYourIPBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, yourIP_);
       }
       memoizedSize = size;
       return size;
@@ -3382,6 +3455,8 @@ public final class Registrar {
       }
       result = result && getServiceID()
           .equals(other.getServiceID());
+      result = result && getYourIP()
+          .equals(other.getYourIP());
       return result;
     }
 
@@ -3402,6 +3477,8 @@ public final class Registrar {
       }
       hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
       hash = (53 * hash) + getServiceID().hashCode();
+      hash = (37 * hash) + YOURIP_FIELD_NUMBER;
+      hash = (53 * hash) + getYourIP().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3534,6 +3611,8 @@ public final class Registrar {
         }
         serviceID_ = "";
 
+        yourIP_ = "";
+
         return this;
       }
 
@@ -3567,6 +3646,7 @@ public final class Registrar {
           result.location_ = locationBuilder_.build();
         }
         result.serviceID_ = serviceID_;
+        result.yourIP_ = yourIP_;
         onBuilt();
         return result;
       }
@@ -3616,6 +3696,10 @@ public final class Registrar {
         }
         if (!other.getServiceID().isEmpty()) {
           serviceID_ = other.serviceID_;
+          onChanged();
+        }
+        if (!other.getYourIP().isEmpty()) {
+          yourIP_ = other.yourIP_;
           onChanged();
         }
         onChanged();
@@ -3943,6 +4027,95 @@ public final class Registrar {
   checkByteStringIsUtf8(value);
         
         serviceID_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object yourIP_ = "";
+      /**
+       * <pre>
+       * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+       * </pre>
+       *
+       * <code>optional string YourIP = 4;</code>
+       */
+      public java.lang.String getYourIP() {
+        java.lang.Object ref = yourIP_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          yourIP_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+       * </pre>
+       *
+       * <code>optional string YourIP = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getYourIPBytes() {
+        java.lang.Object ref = yourIP_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          yourIP_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+       * </pre>
+       *
+       * <code>optional string YourIP = 4;</code>
+       */
+      public Builder setYourIP(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        yourIP_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+       * </pre>
+       *
+       * <code>optional string YourIP = 4;</code>
+       */
+      public Builder clearYourIP() {
+        
+        yourIP_ = getDefaultInstance().getYourIP();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ip of the client who called this (for matching if one wants to find, e.g. the nearest one)
+       * </pre>
+       *
+       * <code>optional string YourIP = 4;</code>
+       */
+      public Builder setYourIPBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        yourIP_ = value;
         onChanged();
         return this;
       }
@@ -8254,33 +8427,33 @@ public final class Registrar {
       "registrar.ServiceDescription\022*\n\007Address\030" +
       "\002 \003(\0132\031.registrar.ServiceAddress\"<\n\nGetR" +
       "equest\022.\n\007Service\030\001 \001(\0132\035.registrar.Serv" +
-      "iceDescription\"~\n\013GetResponse\022.\n\007Service",
-      "\030\001 \001(\0132\035.registrar.ServiceDescription\022,\n" +
-      "\010Location\030\002 \001(\0132\032.registrar.ServiceLocat" +
-      "ion\022\021\n\tServiceID\030\003 \001(\t\"&\n\017ShutdownReques" +
-      "t\022\023\n\013ServiceName\030\001 \001(\t\"7\n\014ListResponse\022\'" +
-      "\n\007Service\030\003 \003(\0132\026.registrar.GetResponse\"" +
-      "\017\n\rEmptyResponse\"\033\n\013ListRequest\022\014\n\004Name\030" +
-      "\001 \001(\t\"&\n\021DeregisterRequest\022\021\n\tServiceID\030" +
-      "\001 \001(\t\"W\n\020GetTargetRequest\022\020\n\010Gurupath\030\001 " +
-      "\001(\t\022\014\n\004Name\030\002 \001(\t\022#\n\007ApiType\030\003 \001(\0162\022.reg" +
-      "istrar.Apitype\"2\n\026ProcessShutdownRequest",
-      "\022\n\n\002IP\030\001 \001(\t\022\014\n\004Port\030\002 \003(\005*<\n\007Apitype\022\n\n" +
-      "\006status\020\000\022\010\n\004grpc\020\001\022\010\n\004json\020\002\022\010\n\004html\020\003\022" +
-      "\007\n\003tcp\020\0042\205\004\n\010Registry\022K\n\021DeregisterServi" +
-      "ce\022\034.registrar.DeregisterRequest\032\030.regis" +
-      "trar.EmptyResponse\022E\n\017RegisterService\022\032." +
-      "registrar.ServiceLocation\032\026.registrar.Ge" +
-      "tResponse\022B\n\021GetServiceAddress\022\025.registr" +
-      "ar.GetRequest\032\026.registrar.GetResponse\022?\n" +
-      "\014ListServices\022\026.registrar.ListRequest\032\027." +
-      "registrar.ListResponse\022G\n\017ShutdownServic",
-      "e\022\032.registrar.ShutdownRequest\032\030.registra" +
-      "r.EmptyResponse\022A\n\tGetTarget\022\033.registrar" +
-      ".GetTargetRequest\032\027.registrar.ListRespon" +
-      "se\022T\n\025InformProcessShutdown\022!.registrar." +
-      "ProcessShutdownRequest\032\030.registrar.Empty" +
-      "Responseb\006proto3"
+      "iceDescription\"\216\001\n\013GetResponse\022.\n\007Servic",
+      "e\030\001 \001(\0132\035.registrar.ServiceDescription\022," +
+      "\n\010Location\030\002 \001(\0132\032.registrar.ServiceLoca" +
+      "tion\022\021\n\tServiceID\030\003 \001(\t\022\016\n\006YourIP\030\004 \001(\t\"" +
+      "&\n\017ShutdownRequest\022\023\n\013ServiceName\030\001 \001(\t\"" +
+      "7\n\014ListResponse\022\'\n\007Service\030\003 \003(\0132\026.regis" +
+      "trar.GetResponse\"\017\n\rEmptyResponse\"\033\n\013Lis" +
+      "tRequest\022\014\n\004Name\030\001 \001(\t\"&\n\021DeregisterRequ" +
+      "est\022\021\n\tServiceID\030\001 \001(\t\"W\n\020GetTargetReque" +
+      "st\022\020\n\010Gurupath\030\001 \001(\t\022\014\n\004Name\030\002 \001(\t\022#\n\007Ap" +
+      "iType\030\003 \001(\0162\022.registrar.Apitype\"2\n\026Proce",
+      "ssShutdownRequest\022\n\n\002IP\030\001 \001(\t\022\014\n\004Port\030\002 " +
+      "\003(\005*<\n\007Apitype\022\n\n\006status\020\000\022\010\n\004grpc\020\001\022\010\n\004" +
+      "json\020\002\022\010\n\004html\020\003\022\007\n\003tcp\020\0042\205\004\n\010Registry\022K" +
+      "\n\021DeregisterService\022\034.registrar.Deregist" +
+      "erRequest\032\030.registrar.EmptyResponse\022E\n\017R" +
+      "egisterService\022\032.registrar.ServiceLocati" +
+      "on\032\026.registrar.GetResponse\022B\n\021GetService" +
+      "Address\022\025.registrar.GetRequest\032\026.registr" +
+      "ar.GetResponse\022?\n\014ListServices\022\026.registr" +
+      "ar.ListRequest\032\027.registrar.ListResponse\022",
+      "G\n\017ShutdownService\022\032.registrar.ShutdownR" +
+      "equest\032\030.registrar.EmptyResponse\022A\n\tGetT" +
+      "arget\022\033.registrar.GetTargetRequest\032\027.reg" +
+      "istrar.ListResponse\022T\n\025InformProcessShut" +
+      "down\022!.registrar.ProcessShutdownRequest\032" +
+      "\030.registrar.EmptyResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -8324,7 +8497,7 @@ public final class Registrar {
     internal_static_registrar_GetResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_registrar_GetResponse_descriptor,
-        new java.lang.String[] { "Service", "Location", "ServiceID", });
+        new java.lang.String[] { "Service", "Location", "ServiceID", "YourIP", });
     internal_static_registrar_ShutdownRequest_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_registrar_ShutdownRequest_fieldAccessorTable = new
