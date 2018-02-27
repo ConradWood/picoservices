@@ -487,8 +487,10 @@ func (s *RegistryService) ShutdownService(ctx context.Context, pr *pb.ShutdownRe
 }
 
 // find target based on deploymentpath & apitype...
+// returns a list order by "best fit" (index 0 == best fit)
 func (s *RegistryService) GetTarget(ctx context.Context, pr *pb.GetTargetRequest) (*pb.ListResponse, error) {
 	lr := &pb.ListResponse{}
+	yourip, _ := IPFromContext(ctx)
 	for e := services.Front(); e != nil; e = e.Next() {
 		se := e.Value.(*serviceEntry)
 		if pr.Gurupath != "" {
@@ -502,7 +504,6 @@ func (s *RegistryService) GetTarget(ctx context.Context, pr *pb.GetTargetRequest
 				continue
 			}
 		}
-		yourip, _ := IPFromContext(ctx)
 		for _, si := range se.instances {
 			if si.hasApi(pr.ApiType) {
 				//fmt.Printf("Adding %s\n", si.toString())
@@ -517,6 +518,8 @@ func (s *RegistryService) GetTarget(ctx context.Context, pr *pb.GetTargetRequest
 			}
 		}
 	}
+	SortResponseList(lr, yourip)
+
 	return lr, nil
 	//	return nil, errors.New("No such endpoint (%v)", pr)
 }
@@ -591,5 +594,11 @@ func IPFromContext(ctx context.Context) (string, error) {
 		return "", errors.New("Invalid peer")
 	}
 	return peerhost, nil
+}
 
+// intend is to sort the response list sensible, so that
+// neighbouring lookups receive closest, most errorfree
+// instance...
+// TODO ;-)
+func SortResponseList(lr *ListResponse, ip string) {
 }
