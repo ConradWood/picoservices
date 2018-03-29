@@ -600,5 +600,5 @@ func IPFromContext(ctx context.Context) (string, error) {
 // neighbouring lookups receive closest, most errorfree
 // instance...
 // TODO ;-)
-func SortResponseList(lr *ListResponse, ip string) {
+func SortResponseList(lr *pb.ListResponse, ip string) {
 }

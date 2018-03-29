@@ -30,6 +30,14 @@ func addUserToCache(token string, id string) {
 // we must not return useful errormessages here,
 // so we print them to stdout instead and return a generic message
 func authenticate(ctx context.Context, meta metadata.MD) (context.Context, error) {
+	if meta == nil {
+		fmt.Println("RPCServer: unable to authenticate - missing metadata ")
+		return nil, grpc.Errorf(codes.Unauthenticated, "invalid metadata")
+	}
+	if ctx == nil {
+		fmt.Println("RPCServer: unable to authenticate - missing context ")
+		return nil, grpc.Errorf(codes.Unauthenticated, "invalid context")
+	}
 	if len(meta["token"]) != 1 {
 		fmt.Println("RPCServer: Invalid number of tokens: ", len(meta["token"]))
 		return nil, grpc.Errorf(codes.Unauthenticated, "invalid token")
