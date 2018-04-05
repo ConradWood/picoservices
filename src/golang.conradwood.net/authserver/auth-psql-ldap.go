@@ -187,7 +187,7 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	var res []*auth.User
 	ea, err := mail.ParseAddress(c.Email)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to parse email \"%s\": %s", err)
+		return nil, fmt.Errorf("Failed to parse email \"%s\": %s", c.Email, err)
 	}
 	emailstring := ea.Address
 	uid := pga.getUserIDfromEmail(emailstring)
