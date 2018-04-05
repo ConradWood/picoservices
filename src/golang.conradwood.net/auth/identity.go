@@ -23,4 +23,5 @@ type Authenticator interface {
 	// given a previous challenge and an email, will return a token if challenge and password stuff matches
 	CreateVerifiedToken(email string, password string) string
 	CreateUser(*pb.CreateUserRequest) (string, error)
+	GetUserByEmail(*pb.UserByEmailRequest) ([]*User, error)
 }

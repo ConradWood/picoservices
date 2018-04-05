@@ -253,5 +253,27 @@ func (s *AuthServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 }
 
 func (s *AuthServer) GetUserByEmail(ctx context.Context, req *pb.UserByEmailRequest) (*pb.GetDetailResponse, error) {
-	return nil, fmt.Errorf("GetUserByEmail not implemented in auth server")
+	if req.Email == "" {
+		return nil, fmt.Errorf("Email required")
+	}
+	if authBE == nil {
+		return nil, errors.New("no authentication backend available")
+	}
+	a, err := authBE.GetUserByEmail(req)
+	if err != nil {
+		return nil, fmt.Errorf("Email \"%s\" lookup failed %s", req.Email, err)
+	}
+	if (a == nil) || (len(a) == 0) {
+		return nil, fmt.Errorf("No user found for \"%s\"", req.Email)
+	}
+	if len(a) > 1 {
+		return nil, fmt.Errorf("Error - %d users found for \"%s\" (query was for single user lookup)", len(a), req.Email)
+	}
+	au := a[0]
+	gd := pb.GetDetailResponse{UserID: au.ID,
+		Email:     au.Email,
+		FirstName: au.FirstName,
+		LastName:  au.LastName,
+	}
+	return &gd, nil
 }

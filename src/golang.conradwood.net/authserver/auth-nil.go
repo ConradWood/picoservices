@@ -21,3 +21,7 @@ func (pga *NilAuthenticator) CreateVerifiedToken(email string, pw string) string
 func (pga *NilAuthenticator) CreateUser(*pb.CreateUserRequest) (string, error) {
 	return "", errors.New("CreateUser() not yet implemented")
 }
+
+func (pga *NilAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	return nil, errors.New("GetUserByEmail() not yet implemented")
+}

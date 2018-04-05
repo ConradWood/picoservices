@@ -110,6 +110,7 @@ func (pga *PsqlLdapAuthenticator) GetUserDetail(userid string) (*auth.User, erro
 	return u.a, nil
 }
 
+// return userid or ""
 func (pga *PsqlLdapAuthenticator) getUserIDfromEmail(email string) string {
 	var userid int
 	rows, err := pga.dbcon.Query("SELECT id FROM usertable where email = $1 or ldapcn = $1", email)
@@ -132,7 +133,7 @@ func (pga *PsqlLdapAuthenticator) getUserIDfromEmail(email string) string {
 // given a userid this will retrieve the corresponding row from db and return user struct
 func (pga *PsqlLdapAuthenticator) getUser(userid string) (*dbUser, error) {
 
-	rows, err := pga.dbcon.Query("SELECT id,firstname,lastname,email,ldapcn FROM usertable where id = $1", userid)
+	rows, err := pga.dbcon.Query("SELECT id,firstname,lastname,email,ldapcn FROM usertable where id = $1 order by id asc", userid)
 	if err != nil {
 		s := fmt.Sprintf("Error quering database: %s\n", err)
 		return nil, errors.New(s)
@@ -178,4 +179,39 @@ func (pga *PsqlLdapAuthenticator) CreateUser(c *pb.CreateUserRequest) (string, e
 		return "", err
 	}
 	return pw, nil
+}
+func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	// first check the simple case: is there a user
+	// with a dedicated email
+	var res []*auth.User
+	email := c.Email
+	uid := pga.getUserIDfromEmail(email)
+	if uid != "" {
+		a, err := pga.GetUserDetail(uid)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, a)
+	}
+
+	// now check sql for aliases
+	rows, err := pga.dbcon.Query("SELECT userid FROM emailaliases where alias = $1", email)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var userid int
+	for rows.Next() {
+		err = rows.Scan(&userid)
+		if err != nil {
+			return nil, err
+		}
+		a, err := pga.GetUserDetail(fmt.Sprintf("%d", userid))
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, a)
+	}
+
+	return res, nil
 }

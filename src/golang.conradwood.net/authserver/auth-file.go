@@ -160,3 +160,6 @@ func CreateTokenInFileSystem(dir string, au *auth.User) string {
 func (pga *FileAuthenticator) CreateUser(*pb.CreateUserRequest) (string, error) {
 	return "", errors.New("CreateUser() not yet implemented")
 }
+func (pga *FileAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	return nil, errors.New("GetUserByEmail() not yet implemented")
+}

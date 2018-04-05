@@ -103,3 +103,6 @@ func (pga *PostGresAuthenticator) getUserIDfromEmail(email string) string {
 func (pga *PostGresAuthenticator) CreateUser(*pb.CreateUserRequest) (string, error) {
 	return "", errors.New("CreateUser() not yet implemented")
 }
+func (pga *PostGresAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	return nil, errors.New("GetUserByEmail() not yet implemented")
+}

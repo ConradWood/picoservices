@@ -31,6 +31,7 @@ var (
 	lastname   = flag.String("lastname", "", "Lastname of the user to create")
 	username   = flag.String("username", "", "username of the user to create")
 	svcaccount = flag.String("servicename", "", "name of a service to create (instead of lastname/firstname etc...")
+	lookup     = flag.String("lookup", "", "lookup an `emailaddress`")
 )
 
 func readLine(prompt string) string {
@@ -69,7 +70,11 @@ func main() {
 	fmt.Println("Creating aclient...")
 	aclient := pb.NewAuthenticationServiceClient(conn)
 	ctx := context.Background()
-
+	if *lookup != "" {
+		err := lookupEmail(ctx, aclient)
+		bail(err, "Unable to lookup email")
+		os.Exit(0)
+	}
 	if *svcaccount != "" {
 		*email = fmt.Sprintf("%s@gurusys.co.uk", *svcaccount)
 		*firstname = *svcaccount
@@ -146,4 +151,14 @@ func ResolveAuthToken(token string) string {
 		fmt.Printf("Using token from %s\n", fname)
 	}
 	return strings.TrimSpace(tok)
+}
+
+func lookupEmail(ctx context.Context, stuff pb.AuthenticationServiceClient) error {
+	req := &pb.UserByEmailRequest{Email: *lookup}
+	resp, err := stuff.GetUserByEmail(ctx, req)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Email lookup: %v\n", resp)
+	return nil
 }

@@ -30,3 +30,12 @@ func (pga *AnyAuthenticator) CreateVerifiedToken(email string, pw string) string
 func (pga *AnyAuthenticator) CreateUser(*pb.CreateUserRequest) (string, error) {
 	return "", errors.New("CreateUser() not yet implemented")
 }
+func (pga *AnyAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	var res []*auth.User
+	a, err := pga.GetUserDetail("")
+	if err != nil {
+		return nil, err
+	}
+	res = append(res, a)
+	return res, nil
+}

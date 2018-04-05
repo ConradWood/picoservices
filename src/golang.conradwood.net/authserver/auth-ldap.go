@@ -243,3 +243,7 @@ func taken(id int, ar []int) []int {
 	z := append(ar, id)
 	return z
 }
+
+func (pga *LdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
+	return nil, errors.New("GetUserByEmail() not yet implemented")
+}
