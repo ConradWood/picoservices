@@ -187,14 +187,14 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	var res []*auth.User
 	ea, err := mail.ParseAddress(c.Email)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse email: %s", err)
 	}
 	emailstring := ea.Address
 	uid := pga.getUserIDfromEmail(emailstring)
 	if uid != "" {
 		a, err := pga.GetUserDetail(uid)
 		if err != nil {
-			return nil, err
+			return nil, fmt.ErrorF("Failed to get user detail for %s: %s", uid, err)
 		}
 		res = append(res, a)
 	}
