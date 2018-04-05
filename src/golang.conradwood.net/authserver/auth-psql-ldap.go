@@ -10,6 +10,7 @@ import (
 	_ "github.com/lib/pq"
 	"golang.conradwood.net/auth"
 	pb "golang.conradwood.net/auth/proto"
+	"net/mail"
 )
 
 type PsqlLdapAuthenticator struct {
@@ -184,8 +185,12 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	// first check the simple case: is there a user
 	// with a dedicated email
 	var res []*auth.User
-	email := c.Email
-	uid := pga.getUserIDfromEmail(email)
+	ea, err := mail.ParseAddress(c.Email)
+	if err != nil {
+		return nil, err
+	}
+	emailstring := ea.Address
+	uid := pga.getUserIDfromEmail(emailstring)
 	if uid != "" {
 		a, err := pga.GetUserDetail(uid)
 		if err != nil {
@@ -195,7 +200,7 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	}
 
 	// now check sql for aliases
-	rows, err := pga.dbcon.Query("SELECT userid FROM emailaliases where alias = $1", email)
+	rows, err := pga.dbcon.Query("SELECT userid FROM emailaliases where alias = $1", emailstring)
 	if err != nil {
 		return nil, err
 	}
