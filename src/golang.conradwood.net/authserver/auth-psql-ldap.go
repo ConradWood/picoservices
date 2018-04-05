@@ -194,7 +194,7 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	if uid != "" {
 		a, err := pga.GetUserDetail(uid)
 		if err != nil {
-			return nil, fmt.ErrorF("Failed to get user detail for %s: %s", uid, err)
+			return nil, fmt.Errorf("Failed to get user detail for %s: %s", uid, err)
 		}
 		res = append(res, a)
 	}
@@ -213,7 +213,7 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 		}
 		a, err := pga.GetUserDetail(fmt.Sprintf("%d", userid))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to get user detail for \"%s\": %s", userid, err)
 		}
 		res = append(res, a)
 	}
