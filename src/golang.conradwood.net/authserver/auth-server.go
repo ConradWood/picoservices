@@ -251,3 +251,7 @@ func (s *AuthServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 
 	return &gdr, nil
 }
+
+func (s *AuthServer) GetUserByEmail(ctx context.Context, req *pb.UserByEmailRequest) (*pb.GetDetailResponse, error) {
+	return nil, fmt.Errorf("GetUserByEmail not implemented in auth server")
+}
