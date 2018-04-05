@@ -49,6 +49,10 @@ string FirstName = 3;
 string LastName =4;
 string Password=5;
 }
+
+message UserByEmailRequest {
+string Email=1;
+}
 service AuthenticationService {
 // authenticate a user by username/password, return token
  rpc AuthenticatePassword(AuthenticatePasswordRequest) returns (VerifyPasswordResponse) ;
@@ -58,4 +62,8 @@ service AuthenticationService {
  rpc GetUserByToken(VerifyRequest) returns (GetDetailResponse);
  rpc GetUserDetail(GetDetailRequest) returns (GetDetailResponse) ;
  rpc CreateUser(CreateUserRequest) returns (GetDetailResponse);
+ // will look up a user by email. Email may be any golang parseable format,
+ // e.g. "Conrad Wood" <cnw@gurusystems.com> is ok
+ // if a given email returns more than one user, this will throw an error!
+ rpc GetUserByEmail(UserByEmailRequest) returns (GetDetailResponse);
 }

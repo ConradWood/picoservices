@@ -24,5 +24,5 @@ proto:
 	# 1. protoc-gen-swagger
 	# 2. protoc-gen-grpc-gateway
 	# they are in package github.com/grpc-ecosystem/grpc-gateway
-	@protoc ${PROTOCINC} --java_out=. proto/${PKG}.proto
+#	@protoc ${PROTOCINC} --java_out=. proto/${PKG}.proto
 
