@@ -9,6 +9,7 @@ It is generated from these files:
 	proto/auth.proto
 
 It has these top-level messages:
+	Group
 	VerifyRequest
 	VerifyResponse
 	GetDetailRequest
@@ -17,13 +18,16 @@ It has these top-level messages:
 	VerifyPasswordResponse
 	CreateUserRequest
 	UserByEmailRequest
+	AddToGroupRequest
+	RemoveFromGroupRequest
+	ListGroupRequest
+	UserListResponse
 */
 package auth
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import _ "google.golang.org/genproto/googleapis/api/annotations"
 
 import (
 	context "golang.org/x/net/context"
@@ -41,12 +45,30 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-//
-// import "google/protobuf/empty.proto";
-// import "google/protobuf/duration.proto";
-// import "examples/sub/message.proto";
-// import "examples/sub2/message.proto";
-// import "google/protobuf/timestamp.proto";
+type Group struct {
+	GroupID string `protobuf:"bytes,1,opt,name=GroupID,json=groupID" json:"GroupID,omitempty"`
+	Name    string `protobuf:"bytes,2,opt,name=Name,json=name" json:"Name,omitempty"`
+}
+
+func (m *Group) Reset()                    { *m = Group{} }
+func (m *Group) String() string            { return proto.CompactTextString(m) }
+func (*Group) ProtoMessage()               {}
+func (*Group) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+
+func (m *Group) GetGroupID() string {
+	if m != nil {
+		return m.GroupID
+	}
+	return ""
+}
+
+func (m *Group) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 type VerifyRequest struct {
 	Token string `protobuf:"bytes,1,opt,name=Token,json=token" json:"Token,omitempty"`
 }
@@ -54,7 +76,7 @@ type VerifyRequest struct {
 func (m *VerifyRequest) Reset()                    { *m = VerifyRequest{} }
 func (m *VerifyRequest) String() string            { return proto.CompactTextString(m) }
 func (*VerifyRequest) ProtoMessage()               {}
-func (*VerifyRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (*VerifyRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *VerifyRequest) GetToken() string {
 	if m != nil {
@@ -70,7 +92,7 @@ type VerifyResponse struct {
 func (m *VerifyResponse) Reset()                    { *m = VerifyResponse{} }
 func (m *VerifyResponse) String() string            { return proto.CompactTextString(m) }
 func (*VerifyResponse) ProtoMessage()               {}
-func (*VerifyResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*VerifyResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func (m *VerifyResponse) GetUserID() string {
 	if m != nil {
@@ -86,7 +108,7 @@ type GetDetailRequest struct {
 func (m *GetDetailRequest) Reset()                    { *m = GetDetailRequest{} }
 func (m *GetDetailRequest) String() string            { return proto.CompactTextString(m) }
 func (*GetDetailRequest) ProtoMessage()               {}
-func (*GetDetailRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (*GetDetailRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 func (m *GetDetailRequest) GetUserID() string {
 	if m != nil {
@@ -101,13 +123,14 @@ type GetDetailResponse struct {
 	FirstName string `protobuf:"bytes,3,opt,name=FirstName,json=firstName" json:"FirstName,omitempty"`
 	LastName  string `protobuf:"bytes,4,opt,name=LastName,json=lastName" json:"LastName,omitempty"`
 	// only set when creating users
-	Password string `protobuf:"bytes,5,opt,name=Password,json=password" json:"Password,omitempty"`
+	Password string   `protobuf:"bytes,5,opt,name=Password,json=password" json:"Password,omitempty"`
+	Groups   []*Group `protobuf:"bytes,6,rep,name=Groups,json=groups" json:"Groups,omitempty"`
 }
 
 func (m *GetDetailResponse) Reset()                    { *m = GetDetailResponse{} }
 func (m *GetDetailResponse) String() string            { return proto.CompactTextString(m) }
 func (*GetDetailResponse) ProtoMessage()               {}
-func (*GetDetailResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*GetDetailResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *GetDetailResponse) GetUserID() string {
 	if m != nil {
@@ -144,6 +167,13 @@ func (m *GetDetailResponse) GetPassword() string {
 	return ""
 }
 
+func (m *GetDetailResponse) GetGroups() []*Group {
+	if m != nil {
+		return m.Groups
+	}
+	return nil
+}
+
 type AuthenticatePasswordRequest struct {
 	Email    string `protobuf:"bytes,1,opt,name=Email,json=email" json:"Email,omitempty"`
 	Password string `protobuf:"bytes,2,opt,name=Password,json=password" json:"Password,omitempty"`
@@ -152,7 +182,7 @@ type AuthenticatePasswordRequest struct {
 func (m *AuthenticatePasswordRequest) Reset()                    { *m = AuthenticatePasswordRequest{} }
 func (m *AuthenticatePasswordRequest) String() string            { return proto.CompactTextString(m) }
 func (*AuthenticatePasswordRequest) ProtoMessage()               {}
-func (*AuthenticatePasswordRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*AuthenticatePasswordRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
 func (m *AuthenticatePasswordRequest) GetEmail() string {
 	if m != nil {
@@ -176,7 +206,7 @@ type VerifyPasswordResponse struct {
 func (m *VerifyPasswordResponse) Reset()                    { *m = VerifyPasswordResponse{} }
 func (m *VerifyPasswordResponse) String() string            { return proto.CompactTextString(m) }
 func (*VerifyPasswordResponse) ProtoMessage()               {}
-func (*VerifyPasswordResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*VerifyPasswordResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
 func (m *VerifyPasswordResponse) GetUser() *GetDetailResponse {
 	if m != nil {
@@ -205,7 +235,7 @@ type CreateUserRequest struct {
 func (m *CreateUserRequest) Reset()                    { *m = CreateUserRequest{} }
 func (m *CreateUserRequest) String() string            { return proto.CompactTextString(m) }
 func (*CreateUserRequest) ProtoMessage()               {}
-func (*CreateUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (*CreateUserRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *CreateUserRequest) GetUserName() string {
 	if m != nil {
@@ -249,7 +279,7 @@ type UserByEmailRequest struct {
 func (m *UserByEmailRequest) Reset()                    { *m = UserByEmailRequest{} }
 func (m *UserByEmailRequest) String() string            { return proto.CompactTextString(m) }
 func (*UserByEmailRequest) ProtoMessage()               {}
-func (*UserByEmailRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (*UserByEmailRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
 func (m *UserByEmailRequest) GetEmail() string {
 	if m != nil {
@@ -258,7 +288,88 @@ func (m *UserByEmailRequest) GetEmail() string {
 	return ""
 }
 
+type AddToGroupRequest struct {
+	UserID  string `protobuf:"bytes,1,opt,name=UserID,json=userID" json:"UserID,omitempty"`
+	GroupID string `protobuf:"bytes,2,opt,name=GroupID,json=groupID" json:"GroupID,omitempty"`
+}
+
+func (m *AddToGroupRequest) Reset()                    { *m = AddToGroupRequest{} }
+func (m *AddToGroupRequest) String() string            { return proto.CompactTextString(m) }
+func (*AddToGroupRequest) ProtoMessage()               {}
+func (*AddToGroupRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
+
+func (m *AddToGroupRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *AddToGroupRequest) GetGroupID() string {
+	if m != nil {
+		return m.GroupID
+	}
+	return ""
+}
+
+type RemoveFromGroupRequest struct {
+	UserID  string `protobuf:"bytes,1,opt,name=UserID,json=userID" json:"UserID,omitempty"`
+	GroupID string `protobuf:"bytes,2,opt,name=GroupID,json=groupID" json:"GroupID,omitempty"`
+}
+
+func (m *RemoveFromGroupRequest) Reset()                    { *m = RemoveFromGroupRequest{} }
+func (m *RemoveFromGroupRequest) String() string            { return proto.CompactTextString(m) }
+func (*RemoveFromGroupRequest) ProtoMessage()               {}
+func (*RemoveFromGroupRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
+
+func (m *RemoveFromGroupRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *RemoveFromGroupRequest) GetGroupID() string {
+	if m != nil {
+		return m.GroupID
+	}
+	return ""
+}
+
+type ListGroupRequest struct {
+	GroupID string `protobuf:"bytes,1,opt,name=GroupID,json=groupID" json:"GroupID,omitempty"`
+}
+
+func (m *ListGroupRequest) Reset()                    { *m = ListGroupRequest{} }
+func (m *ListGroupRequest) String() string            { return proto.CompactTextString(m) }
+func (*ListGroupRequest) ProtoMessage()               {}
+func (*ListGroupRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
+
+func (m *ListGroupRequest) GetGroupID() string {
+	if m != nil {
+		return m.GroupID
+	}
+	return ""
+}
+
+type UserListResponse struct {
+	Users []*GetDetailResponse `protobuf:"bytes,1,rep,name=Users,json=users" json:"Users,omitempty"`
+}
+
+func (m *UserListResponse) Reset()                    { *m = UserListResponse{} }
+func (m *UserListResponse) String() string            { return proto.CompactTextString(m) }
+func (*UserListResponse) ProtoMessage()               {}
+func (*UserListResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+
+func (m *UserListResponse) GetUsers() []*GetDetailResponse {
+	if m != nil {
+		return m.Users
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterType((*Group)(nil), "auth.Group")
 	proto.RegisterType((*VerifyRequest)(nil), "auth.VerifyRequest")
 	proto.RegisterType((*VerifyResponse)(nil), "auth.VerifyResponse")
 	proto.RegisterType((*GetDetailRequest)(nil), "auth.GetDetailRequest")
@@ -267,6 +378,10 @@ func init() {
 	proto.RegisterType((*VerifyPasswordResponse)(nil), "auth.VerifyPasswordResponse")
 	proto.RegisterType((*CreateUserRequest)(nil), "auth.CreateUserRequest")
 	proto.RegisterType((*UserByEmailRequest)(nil), "auth.UserByEmailRequest")
+	proto.RegisterType((*AddToGroupRequest)(nil), "auth.AddToGroupRequest")
+	proto.RegisterType((*RemoveFromGroupRequest)(nil), "auth.RemoveFromGroupRequest")
+	proto.RegisterType((*ListGroupRequest)(nil), "auth.ListGroupRequest")
+	proto.RegisterType((*UserListResponse)(nil), "auth.UserListResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -291,6 +406,9 @@ type AuthenticationServiceClient interface {
 	// e.g. "Conrad Wood" <cnw@gurusystems.com> is ok
 	// if a given email returns more than one user, this will throw an error!
 	GetUserByEmail(ctx context.Context, in *UserByEmailRequest, opts ...grpc.CallOption) (*GetDetailResponse, error)
+	AddUserToGroup(ctx context.Context, in *AddToGroupRequest, opts ...grpc.CallOption) (*GetDetailResponse, error)
+	RemoveUserFromGroup(ctx context.Context, in *RemoveFromGroupRequest, opts ...grpc.CallOption) (*GetDetailResponse, error)
+	ListUsersInGroup(ctx context.Context, in *ListGroupRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -355,6 +473,33 @@ func (c *authenticationServiceClient) GetUserByEmail(ctx context.Context, in *Us
 	return out, nil
 }
 
+func (c *authenticationServiceClient) AddUserToGroup(ctx context.Context, in *AddToGroupRequest, opts ...grpc.CallOption) (*GetDetailResponse, error) {
+	out := new(GetDetailResponse)
+	err := grpc.Invoke(ctx, "/auth.AuthenticationService/AddUserToGroup", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) RemoveUserFromGroup(ctx context.Context, in *RemoveFromGroupRequest, opts ...grpc.CallOption) (*GetDetailResponse, error) {
+	out := new(GetDetailResponse)
+	err := grpc.Invoke(ctx, "/auth.AuthenticationService/RemoveUserFromGroup", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) ListUsersInGroup(ctx context.Context, in *ListGroupRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	out := new(UserListResponse)
+	err := grpc.Invoke(ctx, "/auth.AuthenticationService/ListUsersInGroup", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for AuthenticationService service
 
 type AuthenticationServiceServer interface {
@@ -369,6 +514,9 @@ type AuthenticationServiceServer interface {
 	// e.g. "Conrad Wood" <cnw@gurusystems.com> is ok
 	// if a given email returns more than one user, this will throw an error!
 	GetUserByEmail(context.Context, *UserByEmailRequest) (*GetDetailResponse, error)
+	AddUserToGroup(context.Context, *AddToGroupRequest) (*GetDetailResponse, error)
+	RemoveUserFromGroup(context.Context, *RemoveFromGroupRequest) (*GetDetailResponse, error)
+	ListUsersInGroup(context.Context, *ListGroupRequest) (*UserListResponse, error)
 }
 
 func RegisterAuthenticationServiceServer(s *grpc.Server, srv AuthenticationServiceServer) {
@@ -483,6 +631,60 @@ func _AuthenticationService_GetUserByEmail_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_AddUserToGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddToGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).AddUserToGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthenticationService/AddUserToGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).AddUserToGroup(ctx, req.(*AddToGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_RemoveUserFromGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveFromGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).RemoveUserFromGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthenticationService/RemoveUserFromGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).RemoveUserFromGroup(ctx, req.(*RemoveFromGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_ListUsersInGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).ListUsersInGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthenticationService/ListUsersInGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).ListUsersInGroup(ctx, req.(*ListGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthenticationService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "auth.AuthenticationService",
 	HandlerType: (*AuthenticationServiceServer)(nil),
@@ -511,6 +713,18 @@ var _AuthenticationService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "GetUserByEmail",
 			Handler:    _AuthenticationService_GetUserByEmail_Handler,
 		},
+		{
+			MethodName: "AddUserToGroup",
+			Handler:    _AuthenticationService_AddUserToGroup_Handler,
+		},
+		{
+			MethodName: "RemoveUserFromGroup",
+			Handler:    _AuthenticationService_RemoveUserFromGroup_Handler,
+		},
+		{
+			MethodName: "ListUsersInGroup",
+			Handler:    _AuthenticationService_ListUsersInGroup_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/auth.proto",
@@ -519,33 +733,42 @@ var _AuthenticationService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("proto/auth.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 433 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xbc, 0x54, 0x4d, 0xab, 0xd3, 0x40,
-	0x14, 0x25, 0x7d, 0x69, 0x49, 0xaf, 0xbc, 0xe7, 0x7b, 0x63, 0xad, 0x21, 0x76, 0xa1, 0x01, 0xe1,
-	0x51, 0xa1, 0x85, 0xba, 0x95, 0xa2, 0xb6, 0x5a, 0x04, 0x51, 0xa9, 0x5f, 0x0b, 0x57, 0x63, 0xbd,
-	0x6d, 0x07, 0xd3, 0x4c, 0xcc, 0x4c, 0x94, 0xfe, 0x12, 0x17, 0xfe, 0x0e, 0xff, 0x9f, 0xcc, 0x47,
-	0xc8, 0x68, 0x4c, 0xdc, 0xbd, 0x5d, 0x6e, 0xce, 0xb9, 0xa7, 0xe7, 0x9e, 0x53, 0x02, 0xe7, 0x59,
-	0xce, 0x25, 0x9f, 0xd2, 0x42, 0xee, 0x27, 0xfa, 0x91, 0xf8, 0xea, 0x39, 0x1a, 0xed, 0x38, 0xdf,
-	0x25, 0x38, 0xa5, 0x19, 0x9b, 0xd2, 0x34, 0xe5, 0x92, 0x4a, 0xc6, 0x53, 0x61, 0x38, 0xf1, 0x3d,
-	0x38, 0x7d, 0x8f, 0x39, 0xdb, 0x1e, 0xd7, 0xf8, 0xb5, 0x40, 0x21, 0xc9, 0x00, 0xba, 0x6f, 0xf9,
-	0x17, 0x4c, 0x43, 0xef, 0x8e, 0x77, 0xd9, 0x5f, 0x77, 0xa5, 0x1a, 0xe2, 0x4b, 0x38, 0x2b, 0x69,
-	0x22, 0xe3, 0xa9, 0x40, 0x32, 0x84, 0xde, 0x3b, 0x81, 0xf9, 0xf3, 0xa5, 0x25, 0xf6, 0x0a, 0x3d,
-	0xc5, 0x63, 0x38, 0x5f, 0xa1, 0x5c, 0xa2, 0xa4, 0x2c, 0x29, 0x35, 0x9b, 0xb8, 0x3f, 0x3c, 0xb8,
-	0x70, 0xc8, 0xed, 0xca, 0xca, 0xd9, 0xd3, 0x03, 0x65, 0x49, 0xd8, 0x31, 0xce, 0x50, 0x0d, 0x64,
-	0x04, 0xfd, 0x67, 0x2c, 0x17, 0xf2, 0x25, 0x3d, 0x60, 0x78, 0xa2, 0x91, 0xfe, 0xb6, 0x7c, 0x41,
-	0x22, 0x08, 0x5e, 0x50, 0x0b, 0xfa, 0x1a, 0x0c, 0x12, 0x5a, 0x61, 0xaf, 0xa9, 0x10, 0xdf, 0x79,
-	0xfe, 0x39, 0xec, 0x1a, 0x2c, 0xb3, 0x73, 0xfc, 0x0a, 0x6e, 0x3f, 0x2e, 0xe4, 0x1e, 0x53, 0xc9,
-	0x36, 0x54, 0x62, 0xc9, 0x73, 0x42, 0x32, 0x56, 0x3c, 0xd7, 0x8a, 0x2b, 0xd8, 0xf9, 0x4b, 0xf0,
-	0x23, 0x0c, 0x4d, 0x80, 0x95, 0x94, 0x3d, 0xf7, 0x3e, 0xf8, 0xea, 0x5c, 0x2d, 0x75, 0x6d, 0x76,
-	0x6b, 0xa2, 0x0b, 0xac, 0xa5, 0xb2, 0xf6, 0x55, 0x0a, 0x55, 0x3b, 0x1d, 0xb7, 0x9d, 0x9f, 0x1e,
-	0x5c, 0x2c, 0x72, 0xa4, 0x12, 0x95, 0x52, 0x69, 0x32, 0x82, 0x40, 0x8d, 0xfa, 0x76, 0xe3, 0x33,
-	0x28, 0xec, 0x7c, 0xa5, 0x59, 0x8e, 0x81, 0x28, 0x1f, 0x4f, 0x8e, 0xfa, 0x17, 0x5b, 0x23, 0x9c,
-	0xfd, 0x3a, 0x81, 0x9b, 0x4e, 0xf0, 0x8c, 0xa7, 0x6f, 0x30, 0xff, 0xc6, 0x36, 0x48, 0x3e, 0xc0,
-	0xe0, 0x5f, 0x8d, 0x90, 0xbb, 0x26, 0xb0, 0x96, 0xb6, 0xa2, 0x91, 0xa1, 0x34, 0xe4, 0xff, 0x10,
-	0xae, 0x1b, 0x44, 0x99, 0xd4, 0xe1, 0x92, 0x1b, 0xee, 0x42, 0xa9, 0x32, 0xf8, 0xf3, 0xa5, 0xdd,
-	0x9e, 0xc3, 0xd9, 0x0a, 0xa5, 0xb9, 0xaf, 0x65, 0xb9, 0xa9, 0x56, 0xf2, 0x08, 0x4e, 0xed, 0xbe,
-	0x01, 0xc8, 0xb0, 0xc6, 0xfc, 0x8f, 0xc2, 0x1c, 0xa0, 0xea, 0x9e, 0x58, 0x5a, 0xed, 0xdf, 0xd0,
-	0xbc, 0xbf, 0x70, 0x2e, 0xd0, 0x8d, 0x90, 0xd0, 0x50, 0xeb, 0xa5, 0x35, 0x8a, 0x7c, 0xea, 0xe9,
-	0xaf, 0xc9, 0x83, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x21, 0x48, 0x1a, 0x20, 0x85, 0x04, 0x00,
-	0x00,
+	// 582 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xbc, 0x55, 0xcb, 0x6e, 0xd3, 0x40,
+	0x14, 0x95, 0x53, 0xdb, 0x4d, 0x6f, 0xd4, 0x90, 0x4c, 0x43, 0xb0, 0x42, 0x17, 0xc5, 0x08, 0x29,
+	0x2a, 0x50, 0xa4, 0x20, 0x76, 0xa8, 0x22, 0x7d, 0x45, 0x45, 0x11, 0xa0, 0x50, 0x60, 0xc1, 0xca,
+	0x34, 0xb7, 0xd4, 0x22, 0xf1, 0x04, 0xcf, 0xb8, 0xa8, 0xdf, 0xc0, 0x27, 0xf0, 0x2b, 0x7c, 0x1c,
+	0x9a, 0x3b, 0xe3, 0x64, 0xd2, 0xd4, 0x66, 0x81, 0xc4, 0xce, 0xf7, 0x75, 0xe6, 0xcc, 0xb9, 0x67,
+	0x12, 0x68, 0xcc, 0x52, 0x2e, 0xf9, 0xb3, 0x28, 0x93, 0x97, 0x7b, 0xf4, 0xc9, 0x5c, 0xf5, 0x1d,
+	0xbe, 0x00, 0x6f, 0x90, 0xf2, 0x6c, 0xc6, 0x02, 0x58, 0xa7, 0x8f, 0xd3, 0xa3, 0xc0, 0xd9, 0x71,
+	0xba, 0x1b, 0xa3, 0xf5, 0xaf, 0x3a, 0x64, 0x0c, 0xdc, 0x37, 0xd1, 0x14, 0x83, 0x0a, 0xa5, 0xdd,
+	0x24, 0x9a, 0x62, 0xf8, 0x08, 0x36, 0x3f, 0x62, 0x1a, 0x5f, 0x5c, 0x8f, 0xf0, 0x7b, 0x86, 0x42,
+	0xb2, 0x16, 0x78, 0x67, 0xfc, 0x1b, 0x26, 0x66, 0xd8, 0x93, 0x2a, 0x08, 0xbb, 0x50, 0xcf, 0xdb,
+	0xc4, 0x8c, 0x27, 0x02, 0x59, 0x1b, 0xfc, 0x0f, 0x02, 0xd3, 0xf9, 0x29, 0x7e, 0x46, 0x51, 0xb8,
+	0x0b, 0x8d, 0x01, 0xca, 0x23, 0x94, 0x51, 0x3c, 0xc9, 0x31, 0x8b, 0x7a, 0x7f, 0x3b, 0xd0, 0xb4,
+	0x9a, 0xcb, 0x91, 0x15, 0xb3, 0xe3, 0x69, 0x14, 0x4f, 0x0c, 0x7f, 0x0f, 0x55, 0xc0, 0xb6, 0x61,
+	0xe3, 0x24, 0x4e, 0x85, 0xa4, 0x9b, 0xad, 0x51, 0x65, 0xe3, 0x22, 0x4f, 0xb0, 0x0e, 0x54, 0x87,
+	0x91, 0x29, 0xba, 0x54, 0xac, 0x4e, 0xa2, 0x45, 0xed, 0x5d, 0x24, 0xc4, 0x0f, 0x9e, 0x8e, 0x03,
+	0x4f, 0xd7, 0x66, 0x26, 0x66, 0x0f, 0xc1, 0x27, 0x11, 0x45, 0xe0, 0xef, 0xac, 0x75, 0x6b, 0xbd,
+	0xda, 0x1e, 0x09, 0x4e, 0xb9, 0x91, 0x4f, 0x82, 0x8a, 0xf0, 0x2d, 0xdc, 0xef, 0x67, 0xf2, 0x12,
+	0x13, 0x19, 0x9f, 0x47, 0x12, 0x73, 0x30, 0x4b, 0x49, 0xcd, 0xd7, 0xb1, 0xf9, 0xda, 0xa7, 0x56,
+	0x96, 0x4f, 0x0d, 0x3f, 0x43, 0x5b, 0xab, 0xbc, 0x80, 0x32, 0x9a, 0x3c, 0x06, 0x57, 0x69, 0x42,
+	0x50, 0xb5, 0xde, 0x3d, 0xc3, 0xe6, 0xa6, 0x74, 0x23, 0x57, 0x49, 0xb5, 0x58, 0x61, 0xc5, 0x5e,
+	0xe1, 0x2f, 0x07, 0x9a, 0x87, 0x29, 0x46, 0x12, 0x15, 0x52, 0x4e, 0xb2, 0x03, 0x55, 0x15, 0x92,
+	0x40, 0x9a, 0x67, 0x35, 0x33, 0xf1, 0xff, 0x14, 0x3c, 0xdc, 0x05, 0xa6, 0x78, 0x1c, 0x5c, 0xd3,
+	0x89, 0xa5, 0x12, 0x86, 0xc7, 0xd0, 0xec, 0x8f, 0xc7, 0x67, 0x5c, 0x6f, 0xa3, 0xdc, 0x63, 0xf6,
+	0x73, 0xa8, 0x2c, 0x3d, 0x87, 0xf0, 0x35, 0xb4, 0x47, 0x38, 0xe5, 0x57, 0x78, 0x92, 0xf2, 0xe9,
+	0x3f, 0x62, 0x3d, 0x81, 0xc6, 0x30, 0x16, 0x72, 0x09, 0xa5, 0xf0, 0x21, 0x86, 0x7d, 0x68, 0x28,
+	0x7c, 0x35, 0x31, 0xdf, 0xf0, 0x53, 0xf0, 0x54, 0x4e, 0x04, 0x0e, 0x19, 0xae, 0x70, 0xc5, 0x9e,
+	0xe2, 0x22, 0x7a, 0x3f, 0x3d, 0xb8, 0x6b, 0x99, 0x2f, 0xe6, 0xc9, 0x7b, 0x4c, 0xaf, 0xe2, 0x73,
+	0x64, 0x9f, 0xa0, 0x75, 0x9b, 0x2b, 0xd9, 0x03, 0x8d, 0x58, 0xe2, 0xd8, 0xce, 0xb6, 0x6e, 0x29,
+	0xf0, 0xe0, 0x4b, 0xb8, 0xa3, 0x2b, 0x8a, 0x27, 0x19, 0x8c, 0x6d, 0xd9, 0x03, 0x39, 0x4a, 0x6b,
+	0x39, 0x69, 0xa6, 0xf7, 0xa1, 0x3e, 0x40, 0xa9, 0x77, 0x5c, 0x32, 0x5c, 0x74, 0x6f, 0xf6, 0x0a,
+	0x36, 0xcd, 0xbc, 0x2e, 0xb0, 0xf6, 0x4a, 0xe7, 0x5f, 0x10, 0xf6, 0x01, 0x16, 0xfe, 0x67, 0xa6,
+	0x6d, 0xe5, 0x45, 0x14, 0xcf, 0x1f, 0x5a, 0x37, 0x20, 0x57, 0xb2, 0x40, 0xb7, 0xae, 0x1a, 0xb7,
+	0x18, 0xe4, 0x00, 0xea, 0xfd, 0xf1, 0x58, 0x2b, 0xa8, 0x7f, 0xaf, 0x4d, 0xeb, 0x8a, 0xa3, 0x8b,
+	0x31, 0x86, 0xb0, 0xa5, 0x8d, 0xab, 0x60, 0xe6, 0xe6, 0x65, 0x66, 0x7b, 0xb7, 0x7b, 0xba, 0x8c,
+	0x11, 0x59, 0x97, 0xcc, 0x77, 0x9a, 0x68, 0x28, 0xa3, 0xed, 0x4d, 0x4b, 0x77, 0xda, 0x8b, 0x0b,
+	0xdb, 0xe6, 0xfd, 0xe2, 0xd3, 0x3f, 0xd1, 0xf3, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x1b, 0x47,
+	0x07, 0x33, 0x9d, 0x06, 0x00, 0x00,
 }

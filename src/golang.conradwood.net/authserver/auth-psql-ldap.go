@@ -2,15 +2,25 @@ package main
 
 // authenticate password against ldap
 // save rest in postgres
+// this is the backend currently used in production.
+// take good care when modifying this!
 
 import (
 	"database/sql"
 	"errors"
+	"flag"
 	"fmt"
 	_ "github.com/lib/pq"
 	"golang.conradwood.net/auth"
 	pb "golang.conradwood.net/auth/proto"
 	"net/mail"
+)
+
+var (
+	dbhost = flag.String("dbhost", "postgres", "hostname of the postgres database rdms")
+	dbdb   = flag.String("database", "rpcusers", "database to use for authentication")
+	dbuser = flag.String("dbuser", "root", "username for the database to use for authentication")
+	dbpw   = flag.String("dbpw", "pw", "password for the database to use for authentication")
 )
 
 type PsqlLdapAuthenticator struct {
@@ -219,4 +229,14 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	}
 
 	return res, nil
+}
+
+func (pga *PsqlLdapAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("AddUserToGroup() not implemented")
+}
+func (pga *PsqlLdapAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("RemoveUserFromGroup() not implemented")
+}
+func (pga *PsqlLdapAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("ListUsersInGroup() not implemented")
 }

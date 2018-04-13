@@ -25,3 +25,13 @@ func (pga *NilAuthenticator) CreateUser(*pb.CreateUserRequest) (string, error) {
 func (pga *NilAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
 	return nil, errors.New("GetUserByEmail() not yet implemented")
 }
+
+func (pga *NilAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("AddUserToGroup() not implemented")
+}
+func (pga *NilAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("RemoveUserFromGroup() not implemented")
+}
+func (pga *NilAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("ListUsersInGroup() not implemented")
+}

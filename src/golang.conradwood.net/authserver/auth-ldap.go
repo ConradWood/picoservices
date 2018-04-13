@@ -247,3 +247,13 @@ func taken(id int, ar []int) []int {
 func (pga *LdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
 	return nil, errors.New("GetUserByEmail() not yet implemented")
 }
+
+func (pga *LdapAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("AddUserToGroup() not implemented")
+}
+func (pga *LdapAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("RemoveUserFromGroup() not implemented")
+}
+func (pga *LdapAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("ListUsersInGroup() not implemented")
+}

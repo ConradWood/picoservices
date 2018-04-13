@@ -24,4 +24,7 @@ type Authenticator interface {
 	CreateVerifiedToken(email string, password string) string
 	CreateUser(*pb.CreateUserRequest) (string, error)
 	GetUserByEmail(*pb.UserByEmailRequest) ([]*User, error)
+	AddUserToGroup(req *pb.AddToGroupRequest) ([]*User, error)
+	RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*User, error)
+	ListUsersInGroup(req *pb.ListGroupRequest) ([]*User, error)
 }

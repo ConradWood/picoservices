@@ -39,3 +39,13 @@ func (pga *AnyAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.U
 	res = append(res, a)
 	return res, nil
 }
+
+func (pga *AnyAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("AddUserToGroup() not implemented")
+}
+func (pga *AnyAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("RemoveUserFromGroup() not implemented")
+}
+func (pga *AnyAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
+	return nil, errors.New("ListUsersInGroup() not implemented")
+}

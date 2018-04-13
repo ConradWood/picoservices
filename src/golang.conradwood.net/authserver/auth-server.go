@@ -73,19 +73,7 @@ func st(server *grpc.Server) error {
 }
 func start() error {
 	var err error
-	if *backend == "postgres" {
-		authBE, err = NewPostgresAuthenticator()
-		if err != nil {
-			fmt.Println("Failed to create postgres authenticator", err)
-			return err
-		}
-	} else if *backend == "file" {
-		authBE, err = NewFileAuthenticator(*Tokendir)
-		if err != nil {
-			fmt.Println("Failed to create file authenticator", err)
-			return err
-		}
-	} else if *backend == "none" {
+	if *backend == "none" {
 		authBE = &NilAuthenticator{}
 	} else if *backend == "any" {
 		authBE = &AnyAuthenticator{}
@@ -276,4 +264,14 @@ func (s *AuthServer) GetUserByEmail(ctx context.Context, req *pb.UserByEmailRequ
 		LastName:  au.LastName,
 	}
 	return &gd, nil
+}
+
+func (s *AuthServer) AddUserToGroup(ctx context.Context, req *pb.AddToGroupRequest) (*pb.GetDetailResponse, error) {
+	return nil, fmt.Errorf("Authserver does not yet implement AddUserToGroup")
+}
+func (s *AuthServer) RemoveUserFromGroup(ctx context.Context, req *pb.RemoveFromGroupRequest) (*pb.GetDetailResponse, error) {
+	return nil, fmt.Errorf("Authserver does not yet implement RemoveFromGroup")
+}
+func (s *AuthServer) ListUsersInGroup(ctx context.Context, req *pb.ListGroupRequest) (*pb.UserListResponse, error) {
+	return nil, fmt.Errorf("Authserver does not yet implement ListUsersInGroup")
 }

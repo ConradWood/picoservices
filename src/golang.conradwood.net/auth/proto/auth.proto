@@ -3,14 +3,11 @@ syntax = "proto3";
 
 package auth;
 
-import "google/api/annotations.proto";
-/*
-import "google/protobuf/empty.proto";
-import "google/protobuf/duration.proto";
-import "examples/sub/message.proto";
-import "examples/sub2/message.proto";
-import "google/protobuf/timestamp.proto";
-*/
+message Group {
+ string GroupID=1;
+ string Name=2;
+}
+
 message VerifyRequest {
  string Token = 1;
 }
@@ -29,6 +26,7 @@ string FirstName = 3;
 string LastName =4;
 // only set when creating users
 string Password=5;
+repeated Group Groups=6;
 }
 
 message AuthenticatePasswordRequest {
@@ -53,6 +51,22 @@ string Password=5;
 message UserByEmailRequest {
 string Email=1;
 }
+
+message AddToGroupRequest {
+string UserID=1;
+string GroupID=2;
+}
+message RemoveFromGroupRequest {
+string UserID=1;
+string GroupID=2;
+}
+message ListGroupRequest {
+string GroupID=1;
+}
+
+message UserListResponse {
+repeated GetDetailResponse Users=1;
+}
 service AuthenticationService {
 // authenticate a user by username/password, return token
  rpc AuthenticatePassword(AuthenticatePasswordRequest) returns (VerifyPasswordResponse) ;
@@ -66,4 +80,7 @@ service AuthenticationService {
  // e.g. "Conrad Wood" <cnw@gurusystems.com> is ok
  // if a given email returns more than one user, this will throw an error!
  rpc GetUserByEmail(UserByEmailRequest) returns (GetDetailResponse);
+ rpc AddUserToGroup(AddToGroupRequest) returns (GetDetailResponse);
+ rpc RemoveUserFromGroup(RemoveFromGroupRequest)  returns (GetDetailResponse);
+ rpc ListUsersInGroup(ListGroupRequest) returns (UserListResponse);
 }
