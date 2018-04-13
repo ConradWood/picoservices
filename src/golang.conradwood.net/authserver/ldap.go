@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"golang.conradwood.net/auth"
-	pb "golang.conradwood.net/auth/proto"
 	"gopkg.in/ldap.v2"
 	"strconv"
 )
@@ -23,29 +22,6 @@ var (
 	bindpw       = flag.String("ldap_bind_pw", "", "The password of the user to look up a users cn with prior to authentication")
 	ldaporg      = flag.String("ldap_org", "", "The cn of the top level tree to search for the user in")
 )
-
-type LdapAuthenticator struct {
-}
-
-func (pga *LdapAuthenticator) GetUserDetail(user string) (*auth.User, error) {
-	au := auth.User{
-		FirstName: "john",
-		LastName:  "doe",
-		Email:     "john.doe@microsoft.com",
-		ID:        "1",
-	}
-	return &au, nil
-}
-func (pga *LdapAuthenticator) Authenticate(token string) (string, error) {
-	return "1", nil
-}
-
-func (pga *LdapAuthenticator) CreateVerifiedToken(email string, pw string) string {
-	return CheckLdapPassword(email, pw)
-}
-func (pga *LdapAuthenticator) CreateUser(c *pb.CreateUserRequest) (string, error) {
-	return "", errors.New("CreateUser() rpc not implemented for ldap")
-}
 
 func CheckLdapPassword(username string, pw string) string {
 	// The username and password we want to check
@@ -244,16 +220,9 @@ func taken(id int, ar []int) []int {
 	return z
 }
 
-func (pga *LdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*auth.User, error) {
-	return nil, errors.New("GetUserByEmail() not yet implemented")
+type LdapGroup struct {
 }
 
-func (pga *LdapAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
-	return nil, errors.New("AddUserToGroup() not implemented")
-}
-func (pga *LdapAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
-	return nil, errors.New("RemoveUserFromGroup() not implemented")
-}
-func (pga *LdapAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
-	return nil, errors.New("ListUsersInGroup() not implemented")
+func GetLdapGroupsForUser(user *auth.User) ([]*LdapGroup, error) {
+	return nil, fmt.Errorf("Cannot yet list ldap groups")
 }

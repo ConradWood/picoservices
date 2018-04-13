@@ -77,8 +77,6 @@ func start() error {
 		authBE = &NilAuthenticator{}
 	} else if *backend == "any" {
 		authBE = &AnyAuthenticator{}
-	} else if *backend == "ldap" {
-		authBE = &LdapAuthenticator{}
 	} else if *backend == "psql-ldap" {
 		authBE, err = NewLdapPsqlAuthenticator()
 	} else {
@@ -274,4 +272,8 @@ func (s *AuthServer) RemoveUserFromGroup(ctx context.Context, req *pb.RemoveFrom
 }
 func (s *AuthServer) ListUsersInGroup(ctx context.Context, req *pb.ListGroupRequest) (*pb.UserListResponse, error) {
 	return nil, fmt.Errorf("Authserver does not yet implement ListUsersInGroup")
+}
+
+func (s *AuthServer) ListGroups(ctx context.Context, req *pb.ListAllGroupsRequest) (*pb.GroupList, error) {
+	return nil, fmt.Errorf("Authserver does not yet implement ListGroups")
 }

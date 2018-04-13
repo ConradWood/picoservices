@@ -67,6 +67,10 @@ string GroupID=1;
 message UserListResponse {
 repeated GetDetailResponse Users=1;
 }
+message ListAllGroupsRequest{}
+message GroupList {
+repeated Group Groups=1;
+}
 service AuthenticationService {
 // authenticate a user by username/password, return token
  rpc AuthenticatePassword(AuthenticatePasswordRequest) returns (VerifyPasswordResponse) ;
@@ -83,4 +87,5 @@ service AuthenticationService {
  rpc AddUserToGroup(AddToGroupRequest) returns (GetDetailResponse);
  rpc RemoveUserFromGroup(RemoveFromGroupRequest)  returns (GetDetailResponse);
  rpc ListUsersInGroup(ListGroupRequest) returns (UserListResponse);
+ rpc ListGroups(ListAllGroupsRequest) returns (GroupList);
 }

@@ -231,12 +231,19 @@ func (pga *PsqlLdapAuthenticator) GetUserByEmail(c *pb.UserByEmailRequest) ([]*a
 	return res, nil
 }
 
+/*****
+Groups are annoying. we can have groups in ldap, postgres, <other external tool>
+we store all groups with their ID and their source in postgres. we only ever return
+the ID in postgres and internally map/remap to the source to lookup membership
+*****/
 func (pga *PsqlLdapAuthenticator) AddUserToGroup(req *pb.AddToGroupRequest) ([]*auth.User, error) {
 	return nil, errors.New("AddUserToGroup() not implemented")
 }
 func (pga *PsqlLdapAuthenticator) RemoveUserFromGroup(req *pb.RemoveFromGroupRequest) ([]*auth.User, error) {
 	return nil, errors.New("RemoveUserFromGroup() not implemented")
 }
+
 func (pga *PsqlLdapAuthenticator) ListUsersInGroup(req *pb.ListGroupRequest) ([]*auth.User, error) {
+
 	return nil, errors.New("ListUsersInGroup() not implemented")
 }
