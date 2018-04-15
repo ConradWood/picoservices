@@ -118,9 +118,9 @@ func ldapToUser(entry *ldap.Entry) *auth.User {
 	return &a
 }
 
-//********************************************************8
+//********************************************************
 // CREATE A USER
-//********************************************************8
+//********************************************************
 func CreateLdapUser(cn string, sn string, uid string, pw string) error {
 
 	l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", *ldaphost, *ldapport))
@@ -257,9 +257,8 @@ func GetLdapGroupsForUser(ldapcn string) ([]*auth.Group, error) {
 		for _, at := range entry.Attributes {
 			fmt.Printf("Attribute: %v\n", at)
 		}
-		g := auth.Group{ID: entry.GetAttributeValue("cn"),
-			Source: "ldap",
-			Name:   entry.GetAttributeValue("cn"),
+		g := auth.Group{ID: entry.GetAttributeValue("gidNumber"),
+			Name: entry.GetAttributeValue("cn"),
 		}
 		res = append(res, &g)
 	}

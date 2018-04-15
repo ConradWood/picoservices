@@ -15,8 +15,6 @@ type User struct {
 type Group struct {
 	ID   string
 	Name string
-	// where? ldap/database/CRM/...
-	Source string
 }
 
 // injected into a context

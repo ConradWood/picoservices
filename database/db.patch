@@ -5,4 +5,4 @@ CREATE TABLE usertoken ( id integer PRIMARY KEY DEFAULT nextval('usertoken_seria
 CREATE SEQUENCE emailalias_serial
 CREATE TABLE emailaliases ( id integer PRIMARY KEY DEFAULT nextval('emailalias_serial'), alias varchar(256) NOT NULL, userid integer NOT NULL REFERENCES usertable(id) on delete cascade)
 CREATE SEQUENCE grouptable_serial
-CREATE TABLE groups ( id integer PRIMARY KEY DEFAULT nextval('grouptable_serial'), groupname varchar(256) NOT NULL, origin integer NOT NULL, foreignid varchar(32) NOT NULL )
+CREATE TABLE groups ( id integer PRIMARY KEY DEFAULT nextval('grouptable_serial'), groupname varchar(64) not null UNIQUE, origin integer NOT NULL, foreignid varchar(32) NOT NULL )

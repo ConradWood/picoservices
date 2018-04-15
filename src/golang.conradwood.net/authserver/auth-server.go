@@ -268,7 +268,7 @@ func (s *AuthServer) GetUserByEmail(ctx context.Context, req *pb.UserByEmailRequ
 func convertToProtoGroup(groups []*auth.Group) []*pb.Group {
 	var res []*pb.Group
 	for _, g := range groups {
-		ng := pb.Group{ID: fmt.Sprintf("%s/%s", g.Source, g.ID),
+		ng := pb.Group{ID: g.ID,
 			Name: g.Name,
 		}
 		res = append(res, &ng)

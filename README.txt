@@ -19,6 +19,8 @@ Getting started:
 
 2) start dist/registrar-server
 
+3) start dist/auth-server -backend=none
+
 3) start dist/keyvalueserver-server
 ( you should see a message in the registrar service that it registers)
 
@@ -26,7 +28,17 @@ Getting started:
 ( you should see a messsage in the registrar service that it looksup the
 address of the keyvalueserver)
 
-5) it should deny access. The "authentication" service isn't implemented yet :)
+5) it should deny access. The "authentication" service none doesn't authenticate. change to "any"
+
+
+==========
+
+a thing about groups:
+
+Groups have names and IDs. The IDs are systemwide unique. The Backend-Names are not necessarily unique.
+The auth server maintains its own "translation table" between backend-groupnames and system-wide groupnames.
+Groupnames exposed via RPCs are always normalised and guaranteed to be unique. So are IDs.
+Groupnames exposed via RPCs are called 'systemGroup'
 
 
 

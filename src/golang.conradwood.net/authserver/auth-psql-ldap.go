@@ -122,6 +122,10 @@ func (pga *PsqlLdapAuthenticator) GetUserDetail(userid string) (*auth.User, erro
 	if err != nil {
 		return nil, err
 	}
+	err = pga.backendGroupsToUniGroups(groups, ORIGIN_LDAP)
+	if err != nil {
+		return nil, err
+	}
 	u.a.Groups = groups
 	return u.a, nil
 }
