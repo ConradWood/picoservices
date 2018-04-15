@@ -4,7 +4,7 @@ syntax = "proto3";
 package auth;
 
 message Group {
- string GroupID=1;
+ string ID=1;
  string Name=2;
 }
 

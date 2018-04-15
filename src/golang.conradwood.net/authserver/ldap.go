@@ -23,30 +23,36 @@ var (
 	ldaporg      = flag.String("ldap_org", "", "The cn of the top level tree to search for the user in")
 )
 
-func CheckLdapPassword(username string, pw string) string {
-	// The username and password we want to check
-	password := pw
+func connect() (*ldap.Conn, error) {
 
 	l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", *ldaphost, *ldapport))
 	if err != nil {
-		fmt.Printf("Failed to connect to ldap host %s:%d: %s\n", *ldaphost, *ldapport, err)
-		return ""
+		return nil, fmt.Errorf("Failed to connect to ldap host %s:%d: %s\n", *ldaphost, *ldapport, err)
 	}
-	defer l.Close()
 
 	// Reconnect with TLS
 	err = l.StartTLS(&tls.Config{InsecureSkipVerify: true})
 	if err != nil {
-		fmt.Printf("Failed to do stuff: %s", err)
-		return ""
+		return nil, fmt.Errorf("Failed to start tls: %s", err)
 	}
 
 	// First bind with a read only user
 	err = l.Bind(*bindusername, *bindpw)
 	if err != nil {
-		fmt.Printf("Failed to do stuff: %s", err)
+		return nil, fmt.Errorf("Failed to bind: %s", err)
+	}
+	return l, err
+
+}
+func CheckLdapPassword(username string, pw string) string {
+	// The username and password we want to check
+	password := pw
+	l, err := connect()
+	if err != nil {
+		fmt.Println(err)
 		return ""
 	}
+	defer l.Close()
 
 	ldapClass := "posixAccount"
 	fmt.Printf("Searching for class %s and uid=%s\n", ldapClass, username)
@@ -220,9 +226,42 @@ func taken(id int, ar []int) []int {
 	return z
 }
 
-type LdapGroup struct {
-}
+//********************************************************8
+// Get groups for a given user
+//********************************************************8
 
-func GetLdapGroupsForUser(user *auth.User) ([]*LdapGroup, error) {
-	return nil, fmt.Errorf("Cannot yet list ldap groups")
+func GetLdapGroupsForUser(ldapcn string) ([]*auth.Group, error) {
+	l, err := connect()
+	if err != nil {
+		return nil, err
+	}
+	defer l.Close()
+	ldapClass := "posixGroup"
+	fmt.Printf("Searching for posixGroups for user \"%s\"\n", ldapcn)
+	// Search for the given username
+	searchRequest := ldap.NewSearchRequest(
+		*ldaporg,
+		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
+		fmt.Sprintf("(&(objectClass=%s)(memberUid=%s))", ldapClass, ldapcn),
+		[]string{"memberUid", "cn", "gidNumber"},
+		nil,
+	)
+
+	sr, err := l.Search(searchRequest)
+	if err != nil {
+		return nil, err
+	}
+	var res []*auth.Group
+	for _, entry := range sr.Entries {
+		fmt.Printf("Entry: %v\n", entry)
+		for _, at := range entry.Attributes {
+			fmt.Printf("Attribute: %v\n", at)
+		}
+		g := auth.Group{ID: entry.GetAttributeValue("cn"),
+			Source: "ldap",
+			Name:   entry.GetAttributeValue("cn"),
+		}
+		res = append(res, &g)
+	}
+	return res, nil
 }

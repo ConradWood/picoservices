@@ -260,10 +260,21 @@ func (s *AuthServer) GetUserByEmail(ctx context.Context, req *pb.UserByEmailRequ
 		Email:     au.Email,
 		FirstName: au.FirstName,
 		LastName:  au.LastName,
+		Groups:    convertToProtoGroup(au.Groups),
 	}
 	return &gd, nil
 }
 
+func convertToProtoGroup(groups []*auth.Group) []*pb.Group {
+	var res []*pb.Group
+	for _, g := range groups {
+		ng := pb.Group{ID: fmt.Sprintf("%s/%s", g.Source, g.ID),
+			Name: g.Name,
+		}
+		res = append(res, &ng)
+	}
+	return res
+}
 func (s *AuthServer) AddUserToGroup(ctx context.Context, req *pb.AddToGroupRequest) (*pb.GetDetailResponse, error) {
 	return nil, fmt.Errorf("Authserver does not yet implement AddUserToGroup")
 }

@@ -3,16 +3,12 @@ package main
 // see: https://grpc.io/docs/tutorials/basic/go.html
 
 import (
-	"fmt"
-	"strings"
-	//	"google.golang.org/grpc/metadata"
-
-	"google.golang.org/grpc"
-	//	"github.com/golang/protobuf/proto"
-	"flag"
-	"golang.org/x/net/context"
-	//	"net"
 	"bufio"
+	"flag"
+	"fmt"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"strings"
 
 	pb "golang.conradwood.net/auth/proto"
 	// we really only pull it in to get the certificates...
@@ -159,6 +155,16 @@ func lookupEmail(ctx context.Context, stuff pb.AuthenticationServiceClient) erro
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Email lookup: %v\n", resp)
+	DisplayUser(resp)
 	return nil
+}
+
+func DisplayUser(user *pb.GetDetailResponse) {
+	fmt.Printf("ID:       %s\n", user.UserID)
+	fmt.Printf("Fullname: %s %s\n", user.FirstName, user.LastName)
+	fmt.Printf("Email:    %s\n", user.Email)
+	fmt.Printf("Groups:   %d\n", len(user.Groups))
+	for _, group := range user.Groups {
+		fmt.Printf("          %s (%s)\n", group.Name, group.ID)
+	}
 }

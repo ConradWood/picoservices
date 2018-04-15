@@ -118,6 +118,11 @@ func (pga *PsqlLdapAuthenticator) GetUserDetail(userid string) (*auth.User, erro
 	if err != nil {
 		return nil, err
 	}
+	groups, err := GetLdapGroupsForUser(u.ldapcn)
+	if err != nil {
+		return nil, err
+	}
+	u.a.Groups = groups
 	return u.a, nil
 }
 
