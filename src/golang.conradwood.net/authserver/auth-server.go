@@ -170,6 +170,9 @@ func (s *AuthServer) GetUserByToken(ctx context.Context, req *pb.VerifyRequest) 
 		FirstName: au.FirstName,
 		LastName:  au.LastName,
 	}
+	for _, x := range au.Groups {
+		gd.Groups = append(gd.Groups, &pb.Group{ID: x.ID, Name: x.Name})
+	}
 	return &gd, nil
 }
 
